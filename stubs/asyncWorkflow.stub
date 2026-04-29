@@ -1,0 +1,26 @@
+package rabbitmq
+
+import (
+	xtremerabbitmq "github.com/globalxtreme/go-core/v2/rabbitmq"
+	"service/internal/pkg/core"
+	"sync"
+)
+
+type {{.WorkflowStruct}} struct {
+	xtremerabbitmq.AsyncWorkflowConsumerBase
+
+	mutex sync.Mutex
+}
+
+func (c *{{.WorkflowStruct}}) Consume(payload interface{}) (interface{}, error) {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+
+	return core.RabbitMQErrorHandler(func() (interface{}, error) {
+		return c.Response(payload), nil
+	})
+}
+
+func (c *{{.WorkflowStruct}}) Response(payload interface{}, data ...interface{}) interface{} {
+	return map[string]interface{}{}
+}

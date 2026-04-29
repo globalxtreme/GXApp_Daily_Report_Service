@@ -1,0 +1,32 @@
+File generator:
+For Next Development
+
+1. Feature
+./application generator:feature {feature-name/domain-name}
+Ex: ./application generator:feature workorder
+
+2. Handler
+./application generator:handler -api {mobile/web} {handler-name}
+Ex: ./application generator:handler -api web WorkOrderHandler
+
+3. Service
+./application generator:service -feature {your-feature/domain} {service-name}
+Ex: ./application generator:service -feature workorder WorkOrderService
+
+4. Repository
+./application generator:repository -feature {your-feature/domain} {repository-name}
+Ex: ./application generator:repository -feature workorder WorkOrderRepository
+
+5. Model
+./application generator:model (model-name)
+Ex: ./application generator:model WorkOrder
+
+6. Parser
+./application generator:parser {parser-name}
+Ex: ./application generator:parser WorkOrderParser
+
+7. Request
+./application generator:request {request-name}
+Ex: ./application generator:request WorkOrderRequest
+
+8.

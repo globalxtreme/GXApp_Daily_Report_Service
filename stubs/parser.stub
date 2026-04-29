@@ -1,0 +1,68 @@
+package parser
+
+{{- if .HasModel }}
+
+import (
+	"service/internal/pkg/model"
+)
+{{- end }}
+
+type {{.ParserStruct}} struct {
+    {{- if .HasModel }}
+    Array  []model.{{.Model}}
+    Object model.{{.Model}}
+    {{- end }}
+}
+
+func (parser *{{.ParserStruct}}) Get() []interface{} {
+	var result []interface{}
+
+	{{- if .HasModel }}
+	for _, arr := range parser.Array {
+		firstParser := {{.ParserStruct}}{Object: arr}
+		result = append(result, firstParser.First())
+	}
+	{{- end }}
+
+	return result
+}
+
+func (parser *{{.ParserStruct}}) First() interface{} {
+	{{- if .HasModel }}
+	object := parser.Object
+
+	return map[string]interface{}{
+		"id": object.ID,
+        "createdAt": object.CreatedAt.Format("02/01/2006 15:04"),
+
+	}
+	{{- else }}
+	return nil
+	{{- end }}
+}
+
+
+func (parser *{{.ParserStruct}}) CreateActivity(action string) interface{} {
+    {{- if .HasModel }}
+    object := parser.Object
+
+	return map[string]interface{}{
+		"id":     object.ID,
+        "createdAt": object.CreatedAt.Format("02/01/2006 15:04"),
+	}
+    {{- else }}
+	return nil
+    {{- end }}
+}
+
+func (parser *{{.ParserStruct}}) UpdateActivity(action string) interface{} {
+	return parser.CreateActivity(action)
+}
+
+func (parser *{{.ParserStruct}}) DeleteActivity(action string) interface{} {
+	return parser.CreateActivity(action)
+}
+
+func (parser *{{.ParserStruct}}) GeneralActivity(action string) interface{} {
+	return parser.CreateActivity(action)
+}

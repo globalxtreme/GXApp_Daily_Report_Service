@@ -1,0 +1,26 @@
+package handler
+
+{{- if .HasResource }}
+import (
+	"net/http"
+)
+{{- end }}
+
+type {{.HandlerStruct}} struct {}
+
+{{- if .HasResource }}
+func ({{.HandlerStruct}}) Get(w http.ResponseWriter, r *http.Request) {
+}
+
+func ({{.HandlerStruct}}) Detail(w http.ResponseWriter, r *http.Request) {
+}
+
+func ({{.HandlerStruct}}) Create(w http.ResponseWriter, r *http.Request) {
+}
+
+func ({{.HandlerStruct}}) Update(w http.ResponseWriter, r *http.Request) {
+}
+
+func ({{.HandlerStruct}}) Delete(w http.ResponseWriter, r *http.Request) {
+}
+{{- end }}

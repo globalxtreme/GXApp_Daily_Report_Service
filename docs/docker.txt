@@ -1,0 +1,17 @@
+1. Rubah terlebih dahulu .env sesuai dengan kebutuhan untuk development
+2. Jalankan
+   - cd .github/workflows
+   - docker-compose -p <service-name> up --build -d
+   - nano ~/.zshrc
+     - tambahkan ini di bagian bawah: alias <service-name>="docker exec <service-name>"
+     - simpan
+   - source ~/.zshrc
+   - <service-name> go build -o application cmd/main.go
+   - <service-name> ./application --dev
+3. Step-step di atas adalah step yang biasanya dilakukan di lokal atau laptop masing-masing developer.
+   Dengan menggunakan step-step tersebut, para developer tidak perlu memusingkan versi dari bahasa pemrograman yang digunakan,
+   cukup gunakan docker dan versi yang sudah terinstal di aplikasi.
+4. Untuk dockerfile hanya digunakan untuk push image ke registry dan bukan untuk development, jadi tidak perlu menggunakan itu
+   jika tidak ingin push ke operasional.
+5. Dockerfile akan secara otomatis di build dan di push ke registry saat push atau merge ke branch master pada repository
+   github, jadi hati-hati dan jangan push ke branch master jika tidak ingin push ke registry dan operasional.

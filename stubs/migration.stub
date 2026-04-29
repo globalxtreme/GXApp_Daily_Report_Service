@@ -1,0 +1,19 @@
+package migration
+
+import (
+	xtremedb "github.com/globalxtreme/go-core/v2/database"
+)
+
+type {{.MigrationStruct}} struct{}
+
+func ({{.MigrationStruct}}) Reference() string {
+	return "{{.MigrationStruct}}"
+}
+
+func ({{.MigrationStruct}}) Tables() []xtremedb.Table {
+	return []xtremedb.Table{}
+}
+
+func ({{.MigrationStruct}}) Columns() []xtremedb.Column {
+	return []xtremedb.Column{}
+}

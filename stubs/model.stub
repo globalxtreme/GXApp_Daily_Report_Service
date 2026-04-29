@@ -1,0 +1,15 @@
+package model
+
+import xtrememodel "github.com/globalxtreme/go-core/v2/model"
+
+type {{.ModelStruct}} struct {
+	xtrememodel.BaseModelUUID
+}
+
+func ({{.ModelStruct}}) TableName() string {
+	return "{{.TableName}}"
+}
+
+func (md *{{.ModelStruct}}) SetReference() uint {
+	return md.ID
+}
