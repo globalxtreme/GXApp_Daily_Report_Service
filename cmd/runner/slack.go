@@ -1,14 +1,14 @@
 package runner
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
-	"github.com/robfig/cron/v3"
+	"github.com/go-co-op/gocron"
 	"github.com/spf13/cobra"
 
 	slackapp "service/internal/app/slack"
@@ -42,28 +42,27 @@ func init() {
 
 			botHandler := slackapp.New(config.SlackSocket, slackWrapper, userSvc, reportSvc)
 
-			// Start cron scheduler for daily reminders
-			c := cron.New()
+			// Start gocron scheduler for daily reminders
 			reminderTime := os.Getenv("REMINDER_TIME")
 			if reminderTime == "" {
 				reminderTime = "14:00"
 			}
 
-			var hour, minute int
-			fmt.Sscanf(reminderTime, "%d:%d", &hour, &minute)
-			cronExpr := fmt.Sprintf("%d %d * * 1-5", minute, hour)
-
-			_, err := c.AddFunc(cronExpr, func() {
-				log.Println("[Scheduler] Sending daily reminders...")
-				botHandler.SendReminders(userSvc)
-			})
+			sch := gocron.NewScheduler(time.Local)
+			_, err := sch.Every(1).Week().
+				Monday().Tuesday().Wednesday().Thursday().Friday().
+				At(reminderTime).
+				Do(func() {
+					log.Println("[Scheduler] Sending daily reminders...")
+					botHandler.SendReminders(userSvc)
+				})
 			if err != nil {
-				log.Fatalf("[Scheduler] Invalid cron expression (%s): %v", cronExpr, err)
+				log.Fatalf("[Scheduler] Failed to register reminder job: %v", err)
 			}
 
-			c.Start()
-			log.Printf("[Scheduler] Reminders scheduled at %s (Mon-Fri), cron: %s", reminderTime, cronExpr)
-			defer c.Stop()
+			sch.StartAsync()
+			log.Printf("[Scheduler] Reminders scheduled at %s (Mon-Fri)", reminderTime)
+			defer sch.Stop()
 
 			// Start Slack Socket Mode (blocking) in a goroutine
 			// then wait for OS signal for graceful shutdown
