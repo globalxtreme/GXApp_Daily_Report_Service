@@ -49,8 +49,8 @@ type GXAccessToken struct {
 type contextKey string
 
 const (
-	cookieState       = "gx_oauth2_state"
-	cookieAccessToken = "gx_access_token"
+	cookieState                  = "gx_oauth2_state"
+	cookieAccessToken            = "auth_token"
 	employeeCtxKey    contextKey = "employee"
 )
 
@@ -65,6 +65,7 @@ func Redirect(w http.ResponseWriter, r *http.Request) {
 		Path:     "/",
 		Expires:  time.Now().Add(10 * time.Minute),
 		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
 	})
 
 	authURL := fmt.Sprintf(
@@ -110,10 +111,13 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 
 	// Simpan access token ke cookie (dibaca oleh frontend untuk Auth header)
 	http.SetCookie(w, &http.Cookie{
-		Name:    cookieAccessToken,
-		Value:   token.AccessToken,
-		Path:    "/",
-		Expires: time.Now().Add(time.Duration(token.ExpiresIn) * time.Second),
+		Name:     cookieAccessToken,
+		Value:    token.AccessToken,
+		Path:     "/",
+		Expires:  time.Now().Add(time.Duration(token.ExpiresIn) * time.Second),
+		HttpOnly: false, // FE perlu baca via JS
+		SameSite: http.SameSiteLaxMode,
+		Secure:   false, // masih localhost
 	})
 
 	http.Redirect(w, r, config.OAuth2.FrontendURL, http.StatusFound)
@@ -124,6 +128,7 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := extractToken(r)
+		fmt.Println(token)
 		if token == "" {
 			writeJSON(w, http.StatusUnauthorized, map[string]string{
 				"error": "unauthorized: missing token",
@@ -201,6 +206,7 @@ func exchangeToken(code string) (*GXAccessToken, error) {
 }
 
 func fetchEmployee(accessToken string) (*GXEmployee, error) {
+	fmt.Println(accessToken)
 	req, err := http.NewRequest(http.MethodGet, config.OAuth2.BaseURL+"/oauth2/user", nil)
 	if err != nil {
 		return nil, err
@@ -212,6 +218,8 @@ func fetchEmployee(accessToken string) (*GXEmployee, error) {
 		return nil, fmt.Errorf("http get: %w", err)
 	}
 	defer resp.Body.Close()
+
+	fmt.Println(resp.Body)
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("status %d from /oauth2/user", resp.StatusCode)
