@@ -31,9 +31,6 @@ var rootCmd = &cobra.Command{
 
 		config.InitOAuth2()
 
-		rabbitMQClose := config.InitRabbitMQ()
-		defer rabbitMQClose()
-
 		logCleanup := xtremepkg.InitLogRPC()
 		defer logCleanup()
 
