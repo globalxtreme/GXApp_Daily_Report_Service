@@ -10,8 +10,8 @@ var (
 )
 
 func InitCors() {
-	CorsOptions.AllowedOrigins = []string{xtremepkg.HostFull}
-	CorsOptions.AllowCredentials = false
+	CorsOptions.AllowedOrigins = []string{xtremepkg.HostFull, "http://localhost:3000"}
+	CorsOptions.AllowCredentials = true
 	CorsOptions.AllowedMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE"}
 	CorsOptions.AllowedHeaders = []string{"*"}
 }

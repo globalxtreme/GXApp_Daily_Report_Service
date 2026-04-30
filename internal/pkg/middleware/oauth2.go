@@ -128,7 +128,6 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := extractToken(r)
-		fmt.Println(token)
 		if token == "" {
 			writeJSON(w, http.StatusUnauthorized, map[string]string{
 				"error": "unauthorized: missing token",
@@ -206,7 +205,6 @@ func exchangeToken(code string) (*GXAccessToken, error) {
 }
 
 func fetchEmployee(accessToken string) (*GXEmployee, error) {
-	fmt.Println(accessToken)
 	req, err := http.NewRequest(http.MethodGet, config.OAuth2.BaseURL+"/oauth2/user", nil)
 	if err != nil {
 		return nil, err
@@ -218,8 +216,6 @@ func fetchEmployee(accessToken string) (*GXEmployee, error) {
 		return nil, fmt.Errorf("http get: %w", err)
 	}
 	defer resp.Body.Close()
-
-	fmt.Println(resp.Body)
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("status %d from /oauth2/user", resp.StatusCode)

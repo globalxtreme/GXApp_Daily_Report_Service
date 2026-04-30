@@ -87,18 +87,24 @@ func (b *Builder) AddNormal(text string) *Builder {
 // AddLabelValue menambahkan paragraf dengan label bold diikuti value normal
 // pada baris yang sama. Contoh: "What did you complete yesterday? <jawaban>"
 func (b *Builder) AddLabelValue(label, value string) *Builder {
-	var sb strings.Builder
-	sb.WriteString(`    <w:p>`)
+	var labelSb strings.Builder
+	labelSb.WriteString(`<w:p>`)
+	labelSb.WriteString(`<w:r><w:rPr><w:b/></w:rPr>`)
+	labelSb.WriteString(fmt.Sprintf(
+		`<w:t xml:space="preserve">%s</w:t>`,
+		xmlEscape(label),
+	))
+	labelSb.WriteString(`</w:r>`)
+	labelSb.WriteString(`</w:p>`)
 
-	// Label — bold, dengan spasi setelahnya
-	sb.WriteString(`<w:r><w:rPr><w:b/></w:rPr>`)
-	sb.WriteString(fmt.Sprintf(`<w:t xml:space="preserve">%s </w:t></w:r>`, xmlEscape(label)))
+	// Paragraph 2: value / jawaban
+	var valueSb strings.Builder
+	valueSb.WriteString(`<w:p>`)
+	valueSb.WriteString(textRuns(value, false))
+	valueSb.WriteString(`</w:p>`)
 
-	// Value — normal, mendukung newline
-	sb.WriteString(textRuns(value, false))
+	b.paragraphs = append(b.paragraphs, labelSb.String(), valueSb.String())
 
-	sb.WriteString(`</w:p>`)
-	b.paragraphs = append(b.paragraphs, sb.String())
 	return b
 }
 

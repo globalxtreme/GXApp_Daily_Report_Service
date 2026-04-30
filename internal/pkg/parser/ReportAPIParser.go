@@ -2,6 +2,7 @@ package parser
 
 import (
 	"service/internal/pkg/model"
+	"strconv"
 	"time"
 )
 
@@ -66,15 +67,40 @@ func toUserSummary(u model.ReportUser) UserSummary {
 // ToReportResponse converts a single model.Report to ReportResponse.
 // The Report's User association must be preloaded.
 func ToReportResponse(r model.Report) ReportResponse {
+	completedYesterday := ""
+	if r.CompletedYesterday != "" {
+		completedYesterday, _ = strconv.Unquote(r.CompletedYesterday)
+	}
+
+	planToday := ""
+	if r.PlanToday != "" {
+		planToday, _ = strconv.Unquote(r.PlanToday)
+	}
+
+	finishEstimation := ""
+	if r.FinishEstimation != "" {
+		finishEstimation, _ = strconv.Unquote(r.FinishEstimation)
+	}
+
+	blockers := ""
+	if r.Blockers != "" {
+		blockers, _ = strconv.Unquote(r.Blockers)
+	}
+
+	mood := ""
+	if r.Mood != "" {
+		mood, _ = strconv.Unquote(r.Mood)
+	}
+
 	return ReportResponse{
 		ID:                 r.ID,
 		User:               toUserSummary(r.User),
 		ReportDate:         r.ReportDate.Format("2006-01-02"),
-		CompletedYesterday: r.CompletedYesterday,
-		PlanToday:          r.PlanToday,
-		FinishEstimation:   r.FinishEstimation,
-		Blockers:           r.Blockers,
-		Mood:               r.Mood,
+		CompletedYesterday: completedYesterday,
+		PlanToday:          planToday,
+		FinishEstimation:   finishEstimation,
+		Blockers:           blockers,
+		Mood:               mood,
 		CreatedAt:          r.CreatedAt,
 	}
 }

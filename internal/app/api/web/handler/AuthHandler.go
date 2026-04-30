@@ -26,5 +26,5 @@ func (h AuthHandler) Callback(w http.ResponseWriter, r *http.Request) {
 func (h AuthHandler) Me(w http.ResponseWriter, r *http.Request) {
 	emp := middleware.GetEmployee(r)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{"data": emp})
+	json.NewEncoder(w).Encode(emp)
 }
