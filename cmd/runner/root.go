@@ -29,6 +29,8 @@ var rootCmd = &cobra.Command{
 		DBClose := config.InitDB()
 		defer DBClose()
 
+		config.InitOAuth2()
+
 		rabbitMQClose := config.InitRabbitMQ()
 		defer rabbitMQClose()
 
