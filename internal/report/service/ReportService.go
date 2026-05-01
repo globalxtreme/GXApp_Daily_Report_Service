@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"service/internal/pkg/config"
 	"time"
 
 	"service/internal/pkg/constant"
@@ -119,7 +120,7 @@ func (s *ReportService) completeSession(user *model.ReportUser, session *model.R
 	// Kirim ke channel Slack di background
 	go s.sendToChannel(user, report)
 
-	return "✅ Daily report kamu sudah tersimpan. Terima kasih!", nil
+	return fmt.Sprintf("✅ Daily report kamu sudah tersimpan. Kamu dapat melihat report pada dashboard: %s. Terima kasih!", config.OAuth2.FrontendHost), nil
 }
 
 func (s *ReportService) sendToChannel(user *model.ReportUser, report *model.Report) {

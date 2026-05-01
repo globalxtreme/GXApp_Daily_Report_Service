@@ -120,7 +120,7 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 		Secure:   false, // masih localhost
 	})
 
-	http.Redirect(w, r, config.OAuth2.FrontendURL, http.StatusFound)
+	http.Redirect(w, r, config.OAuth2.FrontendOauthCallback, http.StatusFound)
 }
 
 // AuthMiddleware memvalidasi Bearer token di header Authorization (atau cookie),
