@@ -16,6 +16,9 @@ type Report struct {
 	Blockers           string     `gorm:"type:text;column:blockers"`
 	Mood               string     `gorm:"type:text;column:mood"`
 	SlackChannelTs     string     `gorm:"size:50;column:slackChannelTs"`
+
+	// Virtual field — diisi dari JOIN report_sessions, tidak ditulis ke tabel reports.
+	SessionCompletedAt *time.Time `gorm:"column:sessionCompletedAt;<-:false" json:"-"`
 }
 
 func (Report) TableName() string {

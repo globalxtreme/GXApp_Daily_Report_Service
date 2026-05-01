@@ -9,6 +9,13 @@ import (
 	"gorm.io/gorm"
 )
 
+// sessionSelect adalah SELECT clause yang menyertakan completedAt dari report_sessions
+// sebagai alias sessionCompletedAt agar dipetakan ke model.Report.SessionCompletedAt.
+const sessionSelect = `reports.*, report_sessions."completedAt" as "sessionCompletedAt"`
+
+// sessionJoin adalah JOIN clause untuk menggabungkan report_sessions.
+const sessionJoin = `JOIN report_sessions ON report_sessions."userId" = reports."userId" AND report_sessions."reportDate" = reports."reportDate"`
+
 type ReportQueryRepository struct {
 	db *gorm.DB
 }
@@ -21,7 +28,7 @@ func NewQuery(db *gorm.DB) *ReportQueryRepository {
 // and filters only completed reports.
 func (r *ReportQueryRepository) completedBase() *gorm.DB {
 	return r.db.Model(&model.Report{}).
-		Joins(`JOIN report_sessions ON report_sessions."userId" = reports."userId" AND report_sessions."reportDate" = reports."reportDate"`).
+		Joins(sessionJoin).
 		Where(`report_sessions."isCompleted" = ?`, true)
 }
 
@@ -48,6 +55,7 @@ func (r *ReportQueryRepository) FindAll(page, limit int, sort string) ([]model.R
 	var reports []model.Report
 	err := r.completedBase().
 		Preload("User").
+		Select(sessionSelect).
 		Order(`reports."createdAt" ` + sort).
 		Offset((page-1)*limit).
 		Limit(limit).
@@ -96,8 +104,14 @@ func (r *ReportQueryRepository) FindByUserGrouped(
 	}
 
 	var reports []model.Report
-	q := applyDateRange(r.db.Preload("User").Where(`reports."userId" IN ?`, userIDs), fromDate, toDate)
-	err := q.Order(`reports."userId", reports.` + orderCol + ` ` + sort).
+	err := applyDateRange(
+		r.db.Model(&model.Report{}).
+			Preload("User").
+			Joins(sessionJoin).
+			Where(`reports."userId" IN ? AND report_sessions."isCompleted" = ?`, userIDs, true).
+			Select(sessionSelect),
+		fromDate, toDate,
+	).Order(`reports."userId", reports.` + orderCol + ` ` + sort).
 		Find(&reports).Error
 
 	return reports, total, err
@@ -137,8 +151,11 @@ func (r *ReportQueryRepository) FindByDateGrouped(
 	}
 
 	var reports []model.Report
-	err := r.db.Preload("User").
-		Where(`reports."reportDate"::text IN ?`, dates).
+	err := r.db.Model(&model.Report{}).
+		Preload("User").
+		Joins(sessionJoin).
+		Where(`reports."reportDate"::text IN ? AND report_sessions."isCompleted" = ?`, dates, true).
+		Select(sessionSelect).
 		Order(`reports."reportDate" DESC, reports."userId" ASC`).
 		Find(&reports).Error
 
@@ -152,6 +169,7 @@ func (r *ReportQueryRepository) FindByID(id uint) (*model.Report, error) {
 	var report model.Report
 	err := r.completedBase().
 		Preload("User").
+		Select(sessionSelect).
 		Where(`reports."id" = ?`, id).
 		First(&report).Error
 	if err != nil {
@@ -170,6 +188,7 @@ func (r *ReportQueryRepository) FindByID(id uint) (*model.Report, error) {
 func (r *ReportQueryRepository) FindAllForExport(fromDate, toDate, sort string) ([]model.Report, error) {
 	q := applyDateRange(r.completedBase(), fromDate, toDate).
 		Preload("User").
+		Select(sessionSelect).
 		Order(`reports."reportDate" ` + sort + `, reports."userId" ASC`)
 
 	var reports []model.Report

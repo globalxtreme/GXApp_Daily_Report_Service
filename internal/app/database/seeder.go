@@ -1,5 +1,7 @@
 package database
 
+import "service/internal/app/database/seeder"
+
 type DatabaseSeeder interface {
 	Seed()
 }
@@ -10,7 +12,7 @@ type data struct {
 
 func Seeder() {
 	seeders := []data{
-		//{&seeder.TestingSeeder{}},
+		{&seeder.ReportSeeder{}},
 	}
 
 	for _, seed := range seeders {

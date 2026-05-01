@@ -35,6 +35,7 @@ type ReportResponse struct {
 	Blockers           string      `json:"blockers"`
 	Mood               string      `json:"mood"`
 	CreatedAt          time.Time   `json:"createdAt"`
+	CompletedAt        string      `json:"completedAt"`
 }
 
 // UserReportsResponse groups a user with all their reports (used by
@@ -92,6 +93,11 @@ func ToReportResponse(r model.Report) ReportResponse {
 		mood, _ = strconv.Unquote(r.Mood)
 	}
 
+	var completedAt string
+	if r.SessionCompletedAt != nil {
+		completedAt = r.SessionCompletedAt.Format("2006-01-02 15:04:05")
+	}
+
 	return ReportResponse{
 		ID:                 r.ID,
 		User:               toUserSummary(r.User),
@@ -101,7 +107,8 @@ func ToReportResponse(r model.Report) ReportResponse {
 		FinishEstimation:   finishEstimation,
 		Blockers:           blockers,
 		Mood:               mood,
-		CreatedAt:          r.CreatedAt,
+		CreatedAt:          r.CreatedAt.In(time.Local),
+		CompletedAt:        completedAt,
 	}
 }
 
