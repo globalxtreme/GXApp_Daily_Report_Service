@@ -9,8 +9,8 @@ type ReportSession struct {
 	ReportDate  time.Time  `gorm:"type:date;not null;column:reportDate;uniqueIndex:idx_sessions_user_date"`
 	CurrentStep int16      `gorm:"default:1;column:currentStep"`
 	IsCompleted bool       `gorm:"default:false;column:isCompleted"`
-	StartedAt   time.Time  `gorm:"column:startedAt;autoCreateTime"`
-	CompletedAt *time.Time `gorm:"column:completedAt"`
+	StartedAt   time.Time  `gorm:"column:startedAt;type:timestamp;autoCreateTime"`
+	CompletedAt *time.Time `gorm:"column:completedAt;type:timestamp"`
 }
 
 func (ReportSession) TableName() string {

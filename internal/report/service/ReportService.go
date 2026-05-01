@@ -3,8 +3,9 @@ package reportservice
 import (
 	"errors"
 	"fmt"
+	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
 	"log"
-	"service/internal/pkg/config"
+	"os"
 	"time"
 
 	"service/internal/pkg/constant"
@@ -110,6 +111,7 @@ func (s *ReportService) processAnswer(user *model.ReportUser, session *model.Rep
 
 func (s *ReportService) completeSession(user *model.ReportUser, session *model.ReportSession, report *model.Report) (string, error) {
 	now := time.Now()
+	xtremepkg.LogInfo(now)
 	session.IsCompleted = true
 	session.CompletedAt = &now
 
@@ -120,7 +122,7 @@ func (s *ReportService) completeSession(user *model.ReportUser, session *model.R
 	// Kirim ke channel Slack di background
 	go s.sendToChannel(user, report)
 
-	return fmt.Sprintf("✅ Daily report kamu sudah tersimpan. Kamu dapat melihat report pada dashboard: %s. Terima kasih!", config.OAuth2.FrontendHost), nil
+	return fmt.Sprintf("✅ Daily report kamu sudah tersimpan. \nKamu dapat melihat report pada dashboard: %s. \nTerima kasih!", os.Getenv("FRONTEND_HOST")), nil
 }
 
 func (s *ReportService) sendToChannel(user *model.ReportUser, report *model.Report) {

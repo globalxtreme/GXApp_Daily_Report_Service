@@ -14,7 +14,9 @@ import (
 	"mime/multipart"
 	"service/internal/pkg/config"
 	"service/internal/pkg/constant"
+	"service/internal/pkg/model"
 	"strings"
+	"time"
 )
 
 type testing struct {
@@ -27,10 +29,18 @@ func main() {
 		panic(err.Error())
 	}
 
-	pad := 10
-	format := fmt.Sprintf("%%0%dd", pad)
-	number := fmt.Sprintf("%s"+format, "Testing", 456)
-	fmt.Println(number)
+	Close := config.InitDB()
+	defer Close()
+
+	var session model.ReportSession
+	config.PgSQL.First(&session, "id = ?", 5)
+
+	date := time.Now()
+	fmt.Println("time.Now():", date)
+	fmt.Println("timezone:", date.Location())
+
+	session.CompletedAt = &date
+	config.PgSQL.Save(&session)
 }
 
 func getCase1() interface{} {

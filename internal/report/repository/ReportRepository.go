@@ -37,7 +37,7 @@ func (r *ReportRepository) CreateSession(session *model.ReportSession) error {
 }
 
 func (r *ReportRepository) SaveSession(session *model.ReportSession) error {
-	return r.db.Save(session).Error
+	return r.db.Debug().Save(session).Error
 }
 
 // --- Report ---

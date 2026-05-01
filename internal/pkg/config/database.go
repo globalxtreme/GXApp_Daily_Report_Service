@@ -32,6 +32,7 @@ func InitDB(connections ...string) func() {
 				Password:  os.Getenv("DB_PASSWORD"),
 				Database:  os.Getenv("DB_DATABASE"),
 				ParseTime: true,
+				TimeZone:  "Asia/Makassar",
 			},
 		},
 	}

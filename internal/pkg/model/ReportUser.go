@@ -1,14 +1,13 @@
 package model
 
-import "time"
+import xtrememodel "github.com/globalxtreme/go-core/v2/model"
 
 type ReportUser struct {
-	ID        uint      `gorm:"primaryKey;column:id"`
-	SlackID   string    `gorm:"uniqueIndex;not null;size:50;column:slackId"`
-	Name      string    `gorm:"not null;type:text;column:name"`
-	Email     string    `gorm:"type:text;column:email"`
-	IsActive  bool      `gorm:"default:true;column:isActive"`
-	CreatedAt time.Time `gorm:"column:createdAt;autoCreateTime"`
+	xtrememodel.BaseModel
+	SlackID  string `gorm:"uniqueIndex;not null;size:50;column:slackId"`
+	Name     string `gorm:"not null;type:text;column:name"`
+	Email    string `gorm:"type:text;column:email"`
+	IsActive bool   `gorm:"default:true;column:isActive"`
 }
 
 func (ReportUser) TableName() string {

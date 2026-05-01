@@ -1,9 +1,12 @@
 package model
 
-import "time"
+import (
+	xtrememodel "github.com/globalxtreme/go-core/v2/model"
+	"time"
+)
 
 type Report struct {
-	ID                 uint       `gorm:"primaryKey;column:id"`
+	xtrememodel.BaseModel
 	UserID             uint       `gorm:"not null;column:userId;uniqueIndex:idx_reports_user_date"`
 	User               ReportUser `gorm:"foreignKey:UserID"`
 	ReportDate         time.Time  `gorm:"type:date;not null;column:reportDate;uniqueIndex:idx_reports_user_date"`
@@ -13,7 +16,6 @@ type Report struct {
 	Blockers           string     `gorm:"type:text;column:blockers"`
 	Mood               string     `gorm:"type:text;column:mood"`
 	SlackChannelTs     string     `gorm:"size:50;column:slackChannelTs"`
-	CreatedAt          time.Time  `gorm:"column:createdAt;autoCreateTime"`
 }
 
 func (Report) TableName() string {
