@@ -3,6 +3,7 @@ package parser
 import (
 	"fmt"
 	"service/internal/pkg/model"
+	"strconv"
 	"time"
 )
 
@@ -41,6 +42,31 @@ func FormatReportDate(t time.Time) string {
 }
 
 func FormatChannelMessage(user model.ReportUser, report model.Report) string {
+	completedYesterday := ""
+	if report.CompletedYesterday != "" {
+		completedYesterday, _ = strconv.Unquote(report.CompletedYesterday)
+	}
+
+	planToday := ""
+	if report.PlanToday != "" {
+		planToday, _ = strconv.Unquote(report.PlanToday)
+	}
+
+	finishEstimation := ""
+	if report.FinishEstimation != "" {
+		finishEstimation, _ = strconv.Unquote(report.FinishEstimation)
+	}
+
+	blockers := ""
+	if report.Blockers != "" {
+		blockers, _ = strconv.Unquote(report.Blockers)
+	}
+
+	mood := ""
+	if report.Mood != "" {
+		mood, _ = strconv.Unquote(report.Mood)
+	}
+
 	return fmt.Sprintf(
 		"📋 *Daily Report — %s — %s*\n\n"+
 			"✅ *What did you complete yesterday?*\n%s\n\n"+
@@ -50,10 +76,10 @@ func FormatChannelMessage(user model.ReportUser, report model.Report) string {
 			"😊 *How do you feel today?*\n%s",
 		user.Name,
 		FormatReportDate(report.ReportDate),
-		report.CompletedYesterday,
-		report.PlanToday,
-		report.FinishEstimation,
-		report.Blockers,
-		report.Mood,
+		completedYesterday,
+		planToday,
+		finishEstimation,
+		blockers,
+		mood,
 	)
 }
