@@ -2,7 +2,6 @@ package parser
 
 import (
 	"service/internal/pkg/model"
-	"strconv"
 	"time"
 )
 
@@ -70,27 +69,32 @@ func toUserSummary(u model.ReportUser) UserSummary {
 func ToReportResponse(r model.Report) ReportResponse {
 	completedYesterday := ""
 	if r.CompletedYesterday != "" {
-		completedYesterday, _ = strconv.Unquote(r.CompletedYesterday)
+		completedYesterday = r.CompletedYesterday
+		//completedYesterday, _ = strconv.Unquote(r.CompletedYesterday)
 	}
 
 	planToday := ""
 	if r.PlanToday != "" {
-		planToday, _ = strconv.Unquote(r.PlanToday)
+		planToday = r.PlanToday
+		//planToday, _ = strconv.Unquote(r.PlanToday)
 	}
 
 	finishEstimation := ""
 	if r.FinishEstimation != "" {
-		finishEstimation, _ = strconv.Unquote(r.FinishEstimation)
+		finishEstimation = r.FinishEstimation
+		//finishEstimation, _ = strconv.Unquote(r.FinishEstimation)
 	}
 
 	blockers := ""
 	if r.Blockers != "" {
-		blockers, _ = strconv.Unquote(r.Blockers)
+		blockers = r.Blockers
+		//blockers, _ = strconv.Unquote(r.Blockers)
 	}
 
 	mood := ""
 	if r.Mood != "" {
-		mood, _ = strconv.Unquote(r.Mood)
+		mood = r.Mood
+		//mood, _ = strconv.Unquote(r.Mood)
 	}
 
 	var completedAt string
@@ -112,7 +116,7 @@ func ToReportResponse(r model.Report) ReportResponse {
 	}
 }
 
-// ToReportResponses converts a slice of model.Report.
+// ToReportResponses converts a slice of model.report.
 func ToReportResponses(reports []model.Report) []ReportResponse {
 	out := make([]ReportResponse, len(reports))
 	for i, r := range reports {

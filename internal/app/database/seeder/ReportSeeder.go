@@ -2,9 +2,7 @@ package seeder
 
 import (
 	"log"
-	"strconv"
 	"time"
-
 
 	"service/internal/pkg/config"
 	"service/internal/pkg/model"
@@ -119,7 +117,7 @@ func (s *ReportSeeder) Seed() {
 			// Pilih varian konten berdasarkan rotasi (userID + dayIdx)
 			pick := func(variants []string) string {
 				idx := (int(userID-1) + dayIdx) % len(variants)
-				return strconv.Quote(variants[idx])
+				return variants[idx]
 			}
 
 			completedAt := date.Add(17*time.Hour + time.Duration(userID)*time.Minute)

@@ -3,7 +3,6 @@ package parser
 import (
 	"fmt"
 	"service/internal/pkg/model"
-	"strconv"
 	"time"
 )
 
@@ -44,27 +43,32 @@ func FormatReportDate(t time.Time) string {
 func FormatChannelMessage(user model.ReportUser, report model.Report) string {
 	completedYesterday := ""
 	if report.CompletedYesterday != "" {
-		completedYesterday, _ = strconv.Unquote(report.CompletedYesterday)
+		completedYesterday = report.CompletedYesterday
+		//completedYesterday, _ = strconv.Unquote(report.CompletedYesterday)
 	}
 
 	planToday := ""
 	if report.PlanToday != "" {
-		planToday, _ = strconv.Unquote(report.PlanToday)
+		planToday = report.PlanToday
+		//planToday, _ = strconv.Unquote(report.PlanToday)
 	}
 
 	finishEstimation := ""
 	if report.FinishEstimation != "" {
-		finishEstimation, _ = strconv.Unquote(report.FinishEstimation)
+		finishEstimation = report.FinishEstimation
+		//finishEstimation, _ = strconv.Unquote(report.FinishEstimation)
 	}
 
 	blockers := ""
 	if report.Blockers != "" {
-		blockers, _ = strconv.Unquote(report.Blockers)
+		blockers = report.Blockers
+		//blockers, _ = strconv.Unquote(report.Blockers)
 	}
 
 	mood := ""
 	if report.Mood != "" {
-		mood, _ = strconv.Unquote(report.Mood)
+		mood = report.Mood
+		//mood, _ = strconv.Unquote(report.Mood)
 	}
 
 	return fmt.Sprintf(
