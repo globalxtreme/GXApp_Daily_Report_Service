@@ -67,36 +67,6 @@ func toUserSummary(u model.ReportUser) UserSummary {
 // ToReportResponse converts a single model.Report to ReportResponse.
 // The Report's User association must be preloaded.
 func ToReportResponse(r model.Report) ReportResponse {
-	completedYesterday := ""
-	if r.CompletedYesterday != "" {
-		completedYesterday = r.CompletedYesterday
-		//completedYesterday, _ = strconv.Unquote(r.CompletedYesterday)
-	}
-
-	planToday := ""
-	if r.PlanToday != "" {
-		planToday = r.PlanToday
-		//planToday, _ = strconv.Unquote(r.PlanToday)
-	}
-
-	finishEstimation := ""
-	if r.FinishEstimation != "" {
-		finishEstimation = r.FinishEstimation
-		//finishEstimation, _ = strconv.Unquote(r.FinishEstimation)
-	}
-
-	blockers := ""
-	if r.Blockers != "" {
-		blockers = r.Blockers
-		//blockers, _ = strconv.Unquote(r.Blockers)
-	}
-
-	mood := ""
-	if r.Mood != "" {
-		mood = r.Mood
-		//mood, _ = strconv.Unquote(r.Mood)
-	}
-
 	var completedAt string
 	if r.SessionCompletedAt != nil {
 		completedAt = r.SessionCompletedAt.Format("2006-01-02 15:04:05")
@@ -106,11 +76,11 @@ func ToReportResponse(r model.Report) ReportResponse {
 		ID:                 r.ID,
 		User:               toUserSummary(r.User),
 		ReportDate:         r.ReportDate.Format("2006-01-02"),
-		CompletedYesterday: completedYesterday,
-		PlanToday:          planToday,
-		FinishEstimation:   finishEstimation,
-		Blockers:           blockers,
-		Mood:               mood,
+		CompletedYesterday: r.CompletedYesterday,
+		PlanToday:          r.PlanToday,
+		FinishEstimation:   r.FinishEstimation,
+		Blockers:           r.Blockers,
+		Mood:               r.Mood,
 		CreatedAt:          r.CreatedAt.In(time.Local),
 		CompletedAt:        completedAt,
 	}
