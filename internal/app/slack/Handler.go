@@ -3,12 +3,10 @@ package slack
 import (
 	"errors"
 	"fmt"
-	"log"
-	"strconv"
-
 	slacklib "github.com/slack-go/slack"
 	"github.com/slack-go/slack/slackevents"
 	"github.com/slack-go/slack/socketmode"
+	"log"
 
 	"service/internal/pkg/constant"
 	apperror "service/internal/pkg/error"
@@ -103,7 +101,7 @@ func (h *Handler) handleDM(ev *slackevents.MessageEvent) {
 		return
 	}
 
-	reply, err := h.reportService.ProcessMessage(user, strconv.Quote(ev.Text))
+	reply, err := h.reportService.ProcessMessage(user, ev.Text)
 	if err != nil {
 		log.Printf("[SlackBot] ProcessMessage error (userId=%d): %v", user.ID, err)
 		_ = h.slackClient.SendDM(ev.User,
