@@ -2,8 +2,6 @@ package reportservice
 
 import (
 	"fmt"
-	"strconv"
-
 	"service/internal/pkg/docx"
 	"service/internal/pkg/form"
 	"service/internal/pkg/model"
@@ -145,35 +143,10 @@ func buildGroupedByDate(b *docx.Builder, reports []model.Report) {
 
 // appendReportBlock writes one report's fields into the document.
 func appendReportBlock(b *docx.Builder, r model.Report) {
-	completedYesterday := ""
-	if r.CompletedYesterday != "" {
-		completedYesterday, _ = strconv.Unquote(r.CompletedYesterday)
-	}
-
-	planToday := ""
-	if r.PlanToday != "" {
-		planToday, _ = strconv.Unquote(r.PlanToday)
-	}
-
-	finishEstimation := ""
-	if r.FinishEstimation != "" {
-		finishEstimation, _ = strconv.Unquote(r.FinishEstimation)
-	}
-
-	blockers := ""
-	if r.Blockers != "" {
-		blockers, _ = strconv.Unquote(r.Blockers)
-	}
-
-	mood := ""
-	if r.Mood != "" {
-		mood, _ = strconv.Unquote(r.Mood)
-	}
-
 	b.AddNormal(fmt.Sprintf("%s — %s", r.User.Name, r.ReportDate.Format("2006-01-02")))
-	b.AddLabelValue("What did you complete yesterday?", completedYesterday)
-	b.AddLabelValue("What will you do today?", planToday)
-	b.AddLabelValue("When will you be finished?", finishEstimation)
-	b.AddLabelValue("Anything blocking your progress?", blockers)
-	b.AddLabelValue("How do you feel today?", mood)
+	b.AddLabelValue("What did you complete yesterday?", r.CompletedYesterday)
+	b.AddLabelValue("What will you do today?", r.PlanToday)
+	b.AddLabelValue("When will you be finished?", r.FinishEstimation)
+	b.AddLabelValue("Anything blocking your progress?", r.Blockers)
+	b.AddLabelValue("How do you feel today?", r.Mood)
 }
