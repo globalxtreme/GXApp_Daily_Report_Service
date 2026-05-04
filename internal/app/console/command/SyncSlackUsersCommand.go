@@ -91,5 +91,5 @@ func (c *SyncSlackUsersCommand) Handle() {
 	}
 
 	// 4. Summary
-	fmt.Printf("\nSync selesai: %d user ditambahkan, %d user sudah ada sebelumnya\n", added, skipped)
+	fmt.Printf("\nSync completed: %d user added, %d users already existed\n", added, skipped)
 }

@@ -39,7 +39,7 @@ func (s *ReportService) ProcessMessage(user *model.ReportUser, text string) (str
 
 	// Session selesai → tolak pengisian ulang
 	if session != nil && session.IsCompleted {
-		return "Kamu sudah mengisi daily report hari ini ✅", nil
+		return "You have already submitted your daily report for today ✅", nil
 	}
 
 	// Tidak ada session → jawaban pertama langsung jadi step 1
@@ -122,7 +122,7 @@ func (s *ReportService) completeSession(user *model.ReportUser, session *model.R
 	// Kirim ke channel Slack di background
 	go s.sendToChannel(user, report)
 
-	return fmt.Sprintf("✅ Daily report kamu sudah tersimpan. \nKamu dapat melihat report pada dashboard: %s. \nTerima kasih!", os.Getenv("FRONTEND_HOST")), nil
+	return fmt.Sprintf("✅ Your daily report has been saved. \nYou can view the report on the dashboard: %s. \nThank you!", os.Getenv("FRONTEND_HOST")), nil
 }
 
 func (s *ReportService) sendToChannel(user *model.ReportUser, report *model.Report) {

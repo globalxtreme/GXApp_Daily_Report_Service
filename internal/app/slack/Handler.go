@@ -87,8 +87,8 @@ func (h *Handler) handleDM(ev *slackevents.MessageEvent) {
 	if err != nil {
 		if errors.Is(err, apperror.ErrUserNotFound) {
 			_ = h.slackClient.SendDM(ev.User,
-				"Kamu belum terdaftar sebagai pengguna daily report. "+
-					"Hubungi admin untuk mendaftarkan akun Slack kamu.",
+				"You are not registered as a Daily Report user. "+
+					"Please contact your manager to register your Slack account.",
 			)
 			return
 		}
@@ -97,7 +97,7 @@ func (h *Handler) handleDM(ev *slackevents.MessageEvent) {
 	}
 
 	if !user.IsActive {
-		_ = h.slackClient.SendDM(ev.User, "Akunmu sedang tidak aktif. Hubungi admin.")
+		_ = h.slackClient.SendDM(ev.User, "Your account is currently inactive. Please contact your manager.")
 		return
 	}
 
@@ -105,7 +105,7 @@ func (h *Handler) handleDM(ev *slackevents.MessageEvent) {
 	if err != nil {
 		log.Printf("[SlackBot] ProcessMessage error (userId=%d): %v", user.ID, err)
 		_ = h.slackClient.SendDM(ev.User,
-			fmt.Sprintf("Terjadi kesalahan: %v\nSilakan coba lagi.", err),
+			fmt.Sprintf("An error occurred: %v\nPlease try again.", err),
 		)
 		return
 	}
@@ -128,7 +128,7 @@ func (h *Handler) SendReminders(userSvc *reportservice.ReportUserService) {
 	for _, user := range users {
 		// Reminder langsung embed pertanyaan step 1 agar user bisa langsung menjawab
 		msg := fmt.Sprintf(
-			"Halo %s! Waktunya mengisi daily report kamu hari ini 📋\n\n*%s*",
+			"Hey %s! It's time to fill in your daily report for today. 📋\n\n*%s*",
 			user.Name,
 			constant.SlackStepQuestions[constant.SLACK_STEP_1],
 		)

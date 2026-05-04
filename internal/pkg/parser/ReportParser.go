@@ -7,28 +7,28 @@ import (
 )
 
 var dayNames = map[time.Weekday]string{
-	time.Sunday:    "Minggu",
-	time.Monday:    "Senin",
-	time.Tuesday:   "Selasa",
-	time.Wednesday: "Rabu",
-	time.Thursday:  "Kamis",
-	time.Friday:    "Jumat",
-	time.Saturday:  "Sabtu",
+	time.Sunday:    "Sunday",
+	time.Monday:    "Monday",
+	time.Tuesday:   "Tuesday",
+	time.Wednesday: "Wednesday",
+	time.Thursday:  "Thursday",
+	time.Friday:    "Friday",
+	time.Saturday:  "Saturday",
 }
 
 var monthNames = map[time.Month]string{
-	time.January:   "Januari",
-	time.February:  "Februari",
-	time.March:     "Maret",
+	time.January:   "January",
+	time.February:  "February",
+	time.March:     "March",
 	time.April:     "April",
-	time.May:       "Mei",
-	time.June:      "Juni",
-	time.July:      "Juli",
-	time.August:    "Agustus",
+	time.May:       "May",
+	time.June:      "June",
+	time.July:      "July",
+	time.August:    "August",
 	time.September: "September",
-	time.October:   "Oktober",
+	time.October:   "October",
 	time.November:  "November",
-	time.December:  "Desember",
+	time.December:  "December",
 }
 
 func FormatReportDate(t time.Time) string {
