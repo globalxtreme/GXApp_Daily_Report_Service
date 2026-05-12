@@ -3,7 +3,6 @@ package reportservice
 import (
 	"errors"
 	"fmt"
-	xtremepkg "github.com/globalxtreme/go-core/v2/pkg"
 	"log"
 	"os"
 	"time"
@@ -111,7 +110,6 @@ func (s *ReportService) processAnswer(user *model.ReportUser, session *model.Rep
 
 func (s *ReportService) completeSession(user *model.ReportUser, session *model.ReportSession, report *model.Report) (string, error) {
 	now := time.Now()
-	xtremepkg.LogInfo(now)
 	session.IsCompleted = true
 	session.CompletedAt = &now
 

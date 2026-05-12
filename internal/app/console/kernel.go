@@ -19,6 +19,7 @@ func RegisterCommand(cobraCmd *cobra.Command) {
 
 		&command.TestCommand{},
 		&command.SyncSlackUsersCommand{},
+		&command.SendReminderCommand{},
 	})
 }
 
