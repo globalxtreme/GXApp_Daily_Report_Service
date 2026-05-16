@@ -37,7 +37,7 @@ func (c *SendReminderCommand) Command(cobraCmd *cobra.Command) {
 	}
 
 	addCommand.Flags().StringVar(&slackId, "slackId", "", "Slack ID of the user to send reminder to (required)")
-	_ = addCommand.MarkFlagRequired("slackId")
+	//_ = addCommand.MarkFlagRequired("slackId")
 
 	cobraCmd.AddCommand(&addCommand)
 }
