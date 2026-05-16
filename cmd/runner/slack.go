@@ -50,7 +50,7 @@ func init() {
 
 			sch := gocron.NewScheduler(time.Local)
 			_, err := sch.Every(1).Week().
-				Monday().Tuesday().Wednesday().Thursday().Friday().
+				Monday().Tuesday().Wednesday().Thursday().Friday().Saturday().
 				At(reminderTime).
 				Do(func() {
 					log.Println("[Scheduler] Sending daily reminders...")
